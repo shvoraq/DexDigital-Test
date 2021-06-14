@@ -1,8 +1,17 @@
-Тестовое задание для DexDigital
+<h1>Тестовое задание для DexDigital</h1>
 
+<pre>
 Запуск приложения:
-cp .env.example .env
 
+cp .env.example .env
+alias sail='bash vendor/bin/sail'
+sail up -d
+sail artisan key:generate
+sail artisan migrate
+
+
+</pre>
+<pre>
 Конфиг для бд в env:
 DB_CONNECTION=mysql
 DB_HOST=mysql
@@ -10,14 +19,9 @@ DB_PORT=3306
 DB_DATABASE=dexdigital_test
 DB_USERNAME=sail
 DB_PASSWORD=password
+</pre>
 
-alias sail='bash vendor/bin/sail'
-sail up -d
-sail artisan key:generate
-sail artisan migrate
-
-
-
+<pre>
 Описание:
 Как я понял задание от HR нужно создать "приложение" которое имитирует получение ответа от платёжной системы и записывает данные в таблицы
 
@@ -45,6 +49,7 @@ sail artisan migrate
 При успешной валидации данные записываются по таблицам 
 
 На основе этого можно реализовать обновление.
+</pre>
 
 
 
