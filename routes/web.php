@@ -13,11 +13,19 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/', [\App\Http\Controllers\HomeController::class,'index'])->name('home');
+
+Route::middleware('CheckRequestRequiredParams')->group(function (){
+    Route::get('/validation-error',function (\Illuminate\Http\Request $request) {
+        return view('pages.main', compact('request'));
+    })->name('validation-error');
+
+    Route::get('/sorry',function (\Illuminate\Http\Request $request) {
+        return view('pages.main', compact('request'));
+    })->name('sorry');
+
+
+    Route::get('/thank-you',function (\Illuminate\Http\Request $request) {
+        return view('pages.main', compact('request'));
+    })->name('thank-you');
 });
-
-Route::get('test',function (\Illuminate\Http\Request $request) {
-
-    return view('pages.fail', compact('request'));
-})->name('test');

@@ -15,7 +15,7 @@ class CreateTransactionsTable extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('transaction_id')->unique(); // вижу тире - наверное стринг :)
+            $table->string('transaction_id',32)->unique(); // вижу тире - наверное стринг :)
             $table->string('operation','7');
             $table->string('status','11')->default('created');
             $table->text('descriptor')->nullable();

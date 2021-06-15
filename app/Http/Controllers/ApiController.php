@@ -16,13 +16,17 @@ class ApiController extends Controller
         Order::create($order)->transaction()->createMany($transactions);
 
         if ($request->has('error')){
-            return response()->json([
+            return redirect()->route('sorry',[
                 'status' => $order['status'],
+                'transactions' => $request->transactions,
+                'order' => $request->order,
                 'message' => $request->error['recommended_message_for_user']
             ]);
         }else{
-            return response()->json([
-                'status' => $order['status']
+            return redirect()->route('thank-you',[
+                'status' => $order['status'],
+                'transactions' => $request->transactions,
+                'order' => $request->order,
             ]);
         }
     }

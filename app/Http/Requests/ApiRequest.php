@@ -22,8 +22,7 @@ class ApiRequest extends FormRequest
             foreach ($transactions as $key => $transaction){
                 // проверяем наличие елеммента массива id
                 if (isset($transaction['id'])){
-                    // задаём тип int
-                    $transactions[$key]['transaction_id'] = (int)$transaction['id'];
+                    $transactions[$key]['transaction_id'] = $transaction['id'];
                 }
             }
 
@@ -33,19 +32,6 @@ class ApiRequest extends FormRequest
 
         }
 
-        // проверяем наличие елеммента массива order
-        if(isset($this->order)){
-
-            $order = $this->order;
-            // проверяем наличие елеммента массива id
-            if (isset($order['order_id'])){
-                // задаём тип int
-                $order['order_id'] = (int)$order['order_id'];
-            }
-            $this->merge([
-                'order' => $order
-            ]);
-        }
     }
 
     /**
@@ -67,12 +53,12 @@ class ApiRequest extends FormRequest
     public function rules()
     {
         return [
-            "transactions.*.transaction_id" => 'required|integer|unique:transactions',
+            "transactions.*.transaction_id" => 'required|max:32|unique:transactions',
             "transactions.*.operation" => 'required|max:3',
             "transactions.*.status" => 'required|max:7',
             "transactions.*.descriptor" => 'required',
 
-            "order.order_id" => 'required|integer|unique:App\Models\Order,order_id',
+            "order.order_id" => 'required|max:32|unique:App\Models\Order,order_id',
             "order.status" => 'required|max:11',
             "order.amount" => 'required|max:11',
             "order.currency" => 'required|max:3',
@@ -90,17 +76,13 @@ class ApiRequest extends FormRequest
      */
     protected function failedValidation(Validator $validator)
     {
-        $error = collect($validator->errors())->collapse()->toArray();
-        dd($error);
-        $errors = implode(' | ', $error);
+        $errors = collect($validator->errors())->collapse()->toArray();
 
-        throw new HttpResponseException(response()->json(
-            [
-                'response' => [
-                    'status' => false,
-                    'messages' => $errors
-                ]
-            ],
-            Response::HTTP_UNPROCESSABLE_ENTITY));
+        throw new HttpResponseException(redirect()->route('validation-error',[
+            'status' => 'validation error',
+            'transactions' => $this->transactions,
+            'order' => $this->order,
+            'errors' => $errors
+        ]));
     }
 }
